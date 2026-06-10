@@ -20,16 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module and_gate(clk,reset,seed,A_state,B_state,C_state);
+module and_gate(clk,reset,seed,select,clamp,A_state,B_state,C_state);
 
     input logic clk,reset;
-    //input logic [2:0] select,clamp;
+    input logic [2:0] select,clamp;
     input logic [31:0] seed [2:0];
     
     output logic A_state,B_state,C_state;
     
     //bias and interconnection matrix values from paper
-    parameter BIAS_A = 8'sd1, BIAS_B = 8'sd1, BIAS_C = -8'sd3; 
+    parameter BIAS_A = 8'sd1, BIAS_B = 8'sd1, BIAS_C = -8'sd2; 
     parameter J_AB = -8'sd1, J_AC = 8'sd2, J_BC = 8'sd2; 
     
     //input assignment
@@ -70,12 +70,15 @@ module and_gate(clk,reset,seed,A_state,B_state,C_state);
         
     //p-bit instantiation
     weighted_pbit #(.N(2)) A (.clk(clk),.reset(reset),.enable(enable[0]),
-                    .m(m_a),.J(J_A),.h(BIAS_A),.seed(seed[0]),.out_bit(A_state));
+                    .m(m_a),.J(J_A),.h(BIAS_A),.select(select[0]),
+                    .clamp(clamp[0]),.seed(seed[0]),.out_bit(A_state));
                     
     weighted_pbit #(.N(2)) B (.clk(clk),.reset(reset),.enable(enable[1]),
-                    .m(m_b),.J(J_B),.h(BIAS_B),.seed(seed[1]),.out_bit(B_state));
+                    .m(m_b),.J(J_B),.h(BIAS_B),.select(select[1]),
+                    .clamp(clamp[1]),.seed(seed[1]),.out_bit(B_state));
                     
     weighted_pbit #(.N(2)) C (.clk(clk),.reset(reset),.enable(enable[2]),
-                    .m(m_c),.J(J_C),.h(BIAS_C),.seed(seed[2]),.out_bit(C_state));
+                    .m(m_c),.J(J_C),.h(BIAS_C),.select(select[2]),
+                    .clamp(clamp[2]),.seed(seed[2]),.out_bit(C_state));
     
 endmodule

@@ -21,9 +21,10 @@
 
 
 module weighted_pbit #(parameter N=3)
-    (clk,reset,enable,m,J,h,seed,out_bit);
+    (clk,reset,enable,m,J,h,select,clamp,seed,out_bit);
 
     input logic clk,reset,enable;
+    input logic select,clamp;
     input logic [31:0] seed;
     
     //consider N neighboring p-bits. the output of this p-bit depends upon their outputs
@@ -61,7 +62,8 @@ module weighted_pbit #(parameter N=3)
     
     always_ff@(posedge clk) begin
         if (reset) out_bit <= 0;
-        else if(enable) out_bit <= next_state; 
+        else if (select) out_bit <= clamp;
+        else if (enable) out_bit <= next_state;
         //no else case, therefore out_bit retains previous value unless enabled or reset
     end
     
