@@ -39,14 +39,17 @@ module weighted_pbit #(parameter N=3)
     logic next_state;
     logic [31:0] probability;
     logic [31:0] random;
-    logic signed [N-1:0] m_bipolar;
+    logic signed [3:0] m_bipolar [N-1:0];
     
     output logic out_bit;
         
     always_comb begin
         weighted_sum = h;
         for(int i=0;i<N;i=i+1) begin
-            m_bipolar[i] = 2*m[i] - 1;
+            //binary to bipolar
+            if(m[i] == 1) m_bipolar[i] = 4'sd1;
+            else m_bipolar[i] = -4'sd1;
+            //weighted sum computation
             weighted_sum = weighted_sum + J[i]*m_bipolar[i];
         end
     end  
