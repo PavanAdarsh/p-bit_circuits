@@ -53,6 +53,7 @@ module and_gate(clk,reset,seed,select,clamp,A_state,B_state,C_state);
     logic [8:0] seq_seed,seq_value;
     assign seq_seed = 9'b100000000;
     
+    //enable assignment
     logic [2:0] enable;
     
     //sequencer implementation
